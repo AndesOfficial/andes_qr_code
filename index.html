@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Andes App Redirect</title>
-    <script type="text/javascript">
-        window.onload = function() {
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Andes App Redirect</title>
+  <script type="text/javascript">
+    window.onload = function () {
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      const platform = navigator.platform;
 
-            // Delay the redirect to help with Safari's restrictions
-            setTimeout(function () {
-                if (/android/i.test(ua)) {
-                    window.location.href = "https://play.google.com/store/apps/details?id=com.andes.laundry&hl=en";
-                } else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
-                    window.location.href = "https://apps.apple.com/in/app/andes/id6747010488";
-                } else {
-                    window.location.href = "https://wa.me/8626076578";
-                }
-            }, 500); // 500ms delay to allow Safari redirection
-        };
-    </script>
+      const isAndroid = /android/i.test(ua);
+      const isIOS = /iPhone|iPad|iPod/.test(platform) ||
+                    (/Macintosh/.test(platform) && 'ontouchend' in document); // handles iPadOS Safari
+
+      setTimeout(function () {
+        if (isAndroid) {
+          window.location.href = "https://play.google.com/store/apps/details?id=com.andes.laundry&hl=en";
+        } else if (isIOS) {
+          window.location.href = "https://apps.apple.com/in/app/andes/id6747010488";
+        } else {
+          window.location.href = "https://wa.me/8626076578";
+        }
+      }, 500); // Delay helps Safari allow redirect
+    };
+  </script>
 </head>
 <body>
-    <h1>Redirecting...</h1>
-    <p>If you are not redirected automatically, please choose one of the following options:</p>
-    <ul>
-        <li><a href="https://play.google.com/store/apps/details?id=com.andes.laundry&hl=en">Download Andes for Android</a></li>
-        <li><a href="https://apps.apple.com/in/app/andes/id6747010488">Download Andes for iOS</a></li>
-        <li><a href="https://wa.me/8626076578">Order via WhatsApp</a></li>
-    </ul>
+  <h1>Redirecting...</h1>
+  <p>If you are not redirected automatically, please choose:</p>
+  <ul>
+    <li><a href="https://play.google.com/store/apps/details?id=com.andes.laundry&hl=en">Download Andes for Android</a></li>
+    <li><a href="https://apps.apple.com/in/app/andes/id6747010488">Download Andes for iOS</a></li>
+    <li><a href="https://wa.me/8626076578">Order via WhatsApp</a></li>
+  </ul>
 </body>
 </html>
