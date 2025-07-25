@@ -6,11 +6,16 @@
     <title>Andes App Redirect</title>
     <script type="text/javascript">
         window.onload = function() {
-            if (/android/i.test(navigator.userAgent)) {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+            if (/android/i.test(ua)) {
+                // Redirect to Android Play Store
                 window.location.href = "https://play.google.com/store/apps/details?id=com.andes.laundry&hl=en";
-            } else if (/ios/i.test(navigator.userAgent)) {
+            } else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+                // Redirect to iOS App Store
                 window.location.href = "https://apps.apple.com/in/app/andes/id6747010488";
             } else {
+                // Default: Redirect to WhatsApp
                 window.location.href = "https://wa.me/8626076578";
             }
         };
@@ -18,8 +23,11 @@
 </head>
 <body>
     <h1>Redirecting...</h1>
-    <p>If you are not redirected automatically, please <a href="https://play.google.com/store/apps/details?id=com.andes.laundry&hl=en">click here</a> 
-for Android <a href="https://apps.apple.com/in/app/andes/id6747010488">click here</a> for ios
- or <a href="https://wa.me/8626076578">click here</a> for Whatsapp Order.</p>
+    <p>If you are not redirected automatically, please choose one:</p>
+    <ul>
+        <li><a href="https://play.google.com/store/apps/details?id=com.andes.laundry&hl=en">Download Andes for Android</a></li>
+        <li><a href="https://apps.apple.com/in/app/andes/id6747010488">Download Andes for iOS</a></li>
+        <li><a href="https://wa.me/8626076578">Order via WhatsApp</a></li>
+    </ul>
 </body>
 </html>
