@@ -32,7 +32,7 @@
 
     let redirectUrl;
     if (isAndroid) {
-      redirectUrl = "https://play.google.com/store/apps/details?id=com.andes.laundry&hl=en";
+      redirectUrl = "intent://details?id=com.andes.laundry#Intent;scheme=market;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=com.android.vending;end";
     } else if (isIOS) {
       redirectUrl = "https://apps.apple.com/in/app/andes/id6747010488";
     } else {
