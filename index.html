@@ -31,20 +31,17 @@
     const source = params.get('source') || 'unknown';
     const device = isAndroid ? 'android' : isIOS ? 'ios' : 'other';
 
-    // Determine redirect URL
     let redirectUrl;
     if (isAndroid) {
-      redirectUrl = "intent://details?id=com.andes.laundry#Intent;scheme=market;action=android.intent.action.VIEW;package=com.android.vending;end";
+      redirectUrl = "https://play.google.com/store/apps/details?id=com.andes.laundry&hl=en";
     } else if (isIOS) {
       redirectUrl = "https://apps.apple.com/in/app/andes/id6747010488";
     } else {
       redirectUrl = "https://wa.me/8626076578";
     }
 
-    // Redirect immediately — don't wait for Firestore
     window.location.href = redirectUrl;
 
-    // Save to Firestore in background (fire and forget)
     addDoc(collection(db, "qr_scans"), {
       source: source,
       device: device,
