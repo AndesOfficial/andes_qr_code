@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Andes</title>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -40,14 +39,23 @@
       redirectUrl = "https://wa.me/8626076578";
     }
 
-    window.location.href = redirectUrl;
+    // ✅ Save first, THEN redirect
+    async function trackAndRedirect() {
+      try {
+        await addDoc(collection(db, "qr_scans"), {
+          source: source,
+          device: device,
+          scannedAt: serverTimestamp()
+        });
+      } catch (e) {
+        console.error("Firestore error:", e);
+      } finally {
+        // Always redirect, even if Firestore fails
+        window.location.href = redirectUrl;
+      }
+    }
 
-    addDoc(collection(db, "qr_scans"), {
-      source: source,
-      device: device,
-      scannedAt: serverTimestamp()
-    }).catch(e => console.error("Firestore error:", e));
-
+    trackAndRedirect();
   </script>
 </head>
 <body>
