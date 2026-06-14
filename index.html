@@ -5,49 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Andes App Redirect</title>
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P97JPSZ63Z"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-P97JPSZ63Z');
-  </script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  <script>
-    window.onload = function () {
-      const ua = navigator.userAgent || navigator.vendor || window.opera;
-      const platform = navigator.platform;
-
-      const isAndroid = /android/i.test(ua);
-      const isIOS = /iPhone|iPad|iPod/.test(platform) ||
-                    (/Macintosh/.test(platform) && 'ontouchend' in document);
-
-      const params = new URLSearchParams(window.location.search);
-      const source = params.get('source') || 'unknown';
-
-      gtag('event', 'qr_scan', {
-        event_category: 'app_download',
-        event_label: source,
-        source_medium: source
-      });
-
-      setTimeout(function () {
-        if (isAndroid) {
-          window.location.href = "https://play.google.com/store/apps/details?id=com.andes.laundry&hl=en";
-        } else if (isIOS) {
-          window.location.href = "https://apps.apple.com/in/app/andes/id6747010488";
-        } else {
-          window.location.href = "https://wa.me/8626076578";
-        }
-      }, 500);
+    const firebaseConfig = {
+      apiKey: "AIzaSyAZxbJBdvg25EI36UeoEYvRUVce6bctrjQ",
+      authDomain: "andesuser-792d4.firebaseapp.com",
+      projectId: "andesuser-792d4",
+      storageBucket: "andesuser-792d4.firebasestorage.app",
+      messagingSenderId: "224322264432",
+      appId: "1:224322264432:web:b9fc1e3b84dc16571c83b5"
     };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const platform = navigator.platform;
+    const isAndroid = /android/i.test(ua);
+    const isIOS = /iPhone|iPad|iPod/.test(platform) ||
+                  (/Macintosh/.test(platform) && 'ontouchend' in document);
+
+    const params = new URLSearchParams(window.location.search);
+    const source = params.get('source') || 'unknown';
+    const device = isAndroid ? 'android' : isIOS ? 'ios' : 'other';
+
+    try {
+      await addDoc(collection(db, "qr_scans"), {
+        source: source,
+        device: device,
+        scannedAt: serverTimestamp()
+      });
+    } catch (e) {
+      console.error("Firestore error:", e);
+    }
+
+    setTimeout(() => {
+      if (isAndroid) {
+        window.location.href = "intent://details?id=com.andes.laundry#Intent;scheme=market;action=android.intent.action.VIEW;package=com.android.vending;end";
+      } else if (isIOS) {
+        window.location.href = "https://apps.apple.com/in/app/andes/id6747010488";
+      } else {
+        window.location.href = "https://wa.me/8626076578";
+      }
+    }, 800);
   </script>
 </head>
 <body>
   <h1>Opening Andes...</h1>
   <p>If you are not redirected automatically:</p>
   <ul>
-    <li><a href="https://play.google.com/store/apps/details?id=com.andes.laundry&hl=en">Download for Android</a></li>
+    <li><a href="intent://details?id=com.andes.laundry#Intent;scheme=market;action=android.intent.action.VIEW;package=com.android.vending;end">Download for Android</a></li>
     <li><a href="https://apps.apple.com/in/app/andes/id6747010488">Download for iOS</a></li>
     <li><a href="https://wa.me/8626076578">Order via WhatsApp</a></li>
   </ul>
