@@ -30,16 +30,6 @@
     const source = params.get('source') || 'unknown';
     const device = isAndroid ? 'android' : isIOS ? 'ios' : 'other';
 
-    let redirectUrl;
-    if (isAndroid) {
-      redirectUrl = "intent://details?id=com.andes.laundry#Intent;scheme=market;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=com.android.vending;end";
-    } else if (isIOS) {
-      redirectUrl = "https://apps.apple.com/in/app/andes/id6747010488";
-    } else {
-      redirectUrl = "https://wa.me/8626076578";
-    }
-
-    // ✅ Save first, THEN redirect
     async function trackAndRedirect() {
       try {
         await addDoc(collection(db, "qr_scans"), {
@@ -50,8 +40,28 @@
       } catch (e) {
         console.error("Firestore error:", e);
       } finally {
-        // Always redirect, even if Firestore fails
-        window.location.href = redirectUrl;
+        if (isAndroid) {
+          // Try opening Play Store app first
+          window.location.href = "market://details?id=com.andes.laundry";
+
+          // If Play Store app doesn't open within 1.5s, fallback to browser
+          setTimeout(() => {
+            window.location.href = "https://play.google.com/store/apps/details?id=com.andes.laundry";
+          }, 1500);
+
+        } else if (isIOS) {
+          // Try opening App Store app first
+          window.location.href = "itms-apps://itunes.apple.com/app/id6747010488";
+
+          // Fallback to browser App Store
+          setTimeout(() => {
+            window.location.href = "https://apps.apple.com/in/app/andes/id6747010488";
+          }, 1500);
+
+        } else {
+          // Desktop → WhatsApp
+          window.location.href = "https://wa.me/8626076578";
+        }
       }
     }
 
